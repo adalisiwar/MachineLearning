@@ -1,2 +1,1 @@
-# KMeans
-first MachineLearning project 
+# K-means
