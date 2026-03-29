@@ -25,4 +25,16 @@ Voici l'arborescence principale du projet (focus sur la phase 1) :
 - `requirements.txt` : Liste des dépendances.
 - `README.md` : Ce fichier de documentation.
 
+## Guide d'Utilisation
+1. Activez l'environnement virtuel : `venv\\Scripts\\activate`
+2. Installez dépendances : `pip install -r requirements.txt`
+3. Lancez preprocessing : `python src/preprocessing.py`
+   - Génère data/processed/processed_data.csv
+   - Split en data/train_test/ (X_train.csv, etc.)
+   - Sauvegarde models/preprocessor.pkl, pca.pkl
+   - Crée reports/correlation_heatmap.png
+4. Prochaines étapes : `python src/train_model.py`
+
+Vérifiez les outputs dans les dossiers correspondants.
+
 
