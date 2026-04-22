@@ -1,0 +1,584 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{amssymb}  
+
+
+\geometry{margin=2cm}
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Atelier Machine Learning}
+\lhead{Analyse Comportementale Clientèle}
+\rfoot{Page \thepage}
+
+% Couleurs personnalisées
+\definecolor{headerblue}{RGB}{41, 65, 114}
+\definecolor{lightgray}{RGB}{245, 245, 245}
+\definecolor{accentorange}{RGB}{230, 126, 34}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codepurple}{RGB}{128,0,128}
+\definecolor{backcolour}{RGB}{248,248,248}
+\definecolor{warningred}{RGB}{231, 76, 60}
+\definecolor{successgreen}{RGB}{46, 204, 113}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codepurple},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codegreen},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+
+\tcbset{
+    colback=backcolour,
+    colframe=headerblue,
+    fonttitle=\bfseries,
+    boxrule=1pt,
+    arc=3mm
+}
+
+
+\titleformat{\section}
+{\color{headerblue}\normalfont\Large\bfseries}
+{\thesection}{1em}{}[{\titlerule[2pt]}]
+
+\titleformat{\subsection}
+{\color{accentorange}\normalfont\large\bfseries}
+{\thesubsection}{1em}{}
+
+% Définition de colonnes personnalisées
+\newcolumntype{C}[1]{>\centering\arraybackslash p{#1}}
+\newcolumntype{L}[1]{>\raggedright\arraybackslash p{#1}}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{tikzpicture}[remember picture,overlay]
+    \fill[headerblue] (current page.north west) rectangle ([yshift=-5cm]current page.north east);
+    \node[anchor=north west, xshift=2cm, yshift=-2cm, text=white] at (current page.north west) 
+        {\Huge\textbf{Atelier Machine Learning}};
+    \node[anchor=north west, xshift=2cm, yshift=-3.5cm, text=white] at (current page.north west) 
+        {\Large\textit{Analyse Comportementale Clientèle Retail}};
+\end{tikzpicture}
+
+\vspace{6cm}
+
+\begin{center}
+{\LARGE\textbf{COMPTE RENDU}}\par
+\vspace{1cm}
+{\large Atelier Pratique : E-commerce de Cadeaux}\par
+\vspace{2cm}
+{\large \textbf{Préparé par Siwar ADALI}}
+\vspace{3cm}
+
+\begin{tikzpicture}
+    \draw[headerblue, line width=2pt] (0,0) -- (10,0);
+\end{tikzpicture}
+
+\vspace{2cm}
+
+
+
+\vspace{5cm}
+
+{\textbf{Année Universitaire : 2025-2026}}
+
+\end{center}
+\vfill
+\end{titlepage}
+
+\section{Introduction}
+
+\subsection{Contexte du Projet}
+Ce rapport présente les résultats d'un atelier pratique en Machine Learning appliqué à l'analyse comportementale de la clientèle dans le secteur du e-commerce de cadeaux. L'objectif principal est de développer des modèles prédictifs pour anticiper le churn des clients et prédire des valeurs continues liées à leur comportement d'achat.
+
+Dans un environnement e-commerce fortement concurrentiel, la compréhension fine du comportement client constitue un levier stratégique majeur. Les entreprises ne cherchent plus uniquement à décrire leurs ventes passées, mais à exploiter les données disponibles pour prévoir les comportements futurs, détecter les signaux de désengagement et proposer des actions plus ciblées. Dans ce cadre, les techniques de machine learning permettent de transformer des données transactionnelles brutes en outils d'aide à la décision concrets pour les équipes marketing, commerciales et produit.
+
+Le dataset utilisé contient des informations sur des clients retail : caractéristiques démographiques, habitudes d'achat, fréquence des commandes, niveau de dépense, catégories de produits consultées ou achetées, ainsi que différents indicateurs comportementaux. Les tâches étudiées dans ce projet couvrent la classification binaire du churn, la régression et le clustering, ce qui permet d'aborder le problème sous plusieurs angles complémentaires.
+
+L'intérêt du projet est double. D'une part, il répond à une problématique opérationnelle réelle : identifier les clients susceptibles de quitter la plateforme et mieux comprendre les déterminants de leur engagement. D'autre part, il permet d'illustrer une chaîne de traitement complète en data science, depuis l'exploration des données jusqu'à l'intégration des modèles dans une interface applicative.
+
+Les modèles développés sont :
+\begin{itemize}
+    \item Classification : Decision Tree, KNN, Random Forest et XGBoost pour la prédiction du churn.
+    \item Régression : modèle supervisé sur données brutes pour estimer une variable continue liée à la valeur ou au comportement d'achat.
+    \item Clustering : KMeans combiné à une réduction de dimension par PCA afin d'identifier des segments clients cohérents.
+\end{itemize}
+
+Une application Flask a été déployée pour la démonstration interactive. Elle permet d'illustrer concrètement l'exploitation des modèles entraînés, la visualisation de certains résultats et l'utilisation de la solution dans un cadre décisionnel plus accessible.
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{output/app6.png}
+\caption{Vue d'ensemble de l'application développée pour explorer les données et exploiter les modèles prédictifs du projet.}
+\label{fig:vue-ensemble-projet}
+\end{figure}
+
+\subsection{Enjeux du Projet}
+\begin{itemize}
+    \item Réduire le risque de perte client en détectant plus tôt les profils à fort risque de churn.
+    \item Améliorer la connaissance client grâce à une segmentation fondée sur les comportements observés.
+    \item Soutenir les décisions marketing par des indicateurs quantitatifs et des prédictions exploitables.
+    \item Mieux prioriser les actions de fidélisation, d'upselling et de personnalisation des offres.
+    \item Mettre en évidence l'intérêt d'une approche data-driven dans un contexte métier concret.
+\end{itemize}
+
+\subsection{Apport Méthodologique}
+Ce travail ne se limite pas à l'entraînement de quelques modèles isolés. Il s'inscrit dans une démarche méthodologique complète incluant la préparation des données, la comparaison de plusieurs approches algorithmiques, l'évaluation rigoureuse des performances et l'interprétation des résultats. Cette structuration permet non seulement d'améliorer la qualité des prédictions, mais aussi de garantir une meilleure reproductibilité du projet.
+
+Le rapport met également en avant la complémentarité entre les approches supervisées et non supervisées. La classification répond à une logique prédictive orientée décision, la régression apporte une estimation quantitative utile à l'analyse de la valeur client, tandis que le clustering fournit une lecture plus exploratoire des profils de clientèle. Ensemble, ces approches donnent une vision plus riche et plus exploitable du comportement des utilisateurs.
+
+\subsection{Objectifs}
+\begin{itemize}
+    \item Analyser la structure du jeu de données et les relations entre variables.
+    \item Évaluer la qualité des données : valeurs manquantes, incohérences et variables peu utiles.
+    \item Mettre en place un pipeline de prétraitement fiable et reproductible.
+    \item Sélectionner ou créer des variables pertinentes pour améliorer les modèles.
+    \item Entraîner et comparer plusieurs modèles de classification du churn.
+    \item Identifier le meilleur modèle de classification pour un usage réel.
+    \item Développer un modèle de régression pour estimer une variable continue.
+    \item Appliquer la PCA et le KMeans pour segmenter les clients.
+    \item Interpréter les segments clients et leur valeur potentielle.
+    \item Formuler des recommandations business à partir des résultats obtenus.
+    \item Relier les performances techniques aux besoins métier.
+    \item Intégrer les modèles dans une interface interactive accessible.
+    \item Proposer des pistes d'amélioration pour des travaux futurs.
+\end{itemize}
+
+\subsection{Résultats Attendus}
+À travers cet atelier, le résultat attendu n'est pas uniquement l'obtention de bonnes performances métriques. Il s'agit également de construire une solution cohérente, explicable et valorisable dans un contexte professionnel. Le projet vise donc à montrer comment des méthodes de machine learning peuvent être mobilisées pour mieux comprendre une clientèle, anticiper certains comportements clés et fournir des pistes d'action concrètes à partir des données disponibles.
+
+\clearpage
+
+\section{Analyse Exploratoire des Données (EDA)}
+
+Les données brutes sont issues du fichier \texttt{data/raw/retail\_customers\_COMPLETE\_CATEGORICAL.csv}.
+
+Après chargement avec \texttt{pandas}, une première inspection a été réalisée afin d'observer les premières lignes, les types de variables, le nombre de valeurs manquantes et les statistiques descriptives de base.
+
+\begin{lstlisting}[language=Python, caption=Chargement des données]
+import pandas as pd
+df = pd.read_csv('data/raw/retail_customers_COMPLETE_CATEGORICAL.csv')
+print(df.head())
+print(df.info())
+\end{lstlisting}
+
+\subsection{Structure Générale des Données}
+Le jeu de données contient à la fois des variables catégorielles et numériques décrivant les clients, leurs comportements d'achat et plusieurs indicateurs liés à leur interaction avec la plateforme. Cette diversité de variables est particulièrement intéressante, car elle permet d'aborder le comportement client sous des angles complémentaires : profil socio-démographique, historique transactionnel, intensité d'engagement et potentiel de valeur.
+
+Caractéristiques principales :
+\begin{itemize}
+    \item Variables catégorielles : catégories de produits, segments et classes descriptives.
+    \item Variables numériques : âge, revenus, score crédit, fréquence d'achat et montants dépensés.
+    \item Cible de classification : churn (0/1).
+    \item Cible de régression : valeur continue à prédire selon le scénario étudié.
+\end{itemize}
+
+\subsection{Observations Initiales}
+L'analyse préliminaire a permis de dégager plusieurs constats utiles pour la suite du pipeline. Certaines variables présentent des distributions asymétriques, en particulier celles liées aux montants dépensés ou au nombre d'achats, ce qui est fréquent dans les données e-commerce. D'autres variables montrent des écarts de dispersion importants, suggérant la présence potentielle d'outliers ou de profils clients extrêmes.
+
+Une attention particulière a également été portée à la qualité des données. Les valeurs manquantes, les colonnes peu informatives et les éventuelles redondances entre variables ont été examinées afin de réduire le bruit statistique et d'améliorer la robustesse des modèles. Cette étape a aussi permis de repérer les variables nécessitant un encodage ou une normalisation avant entraînement.
+
+\subsection{Analyse Univariée et Bivariée}
+L'analyse univariée a été utilisée pour étudier séparément la distribution de chaque variable, à travers des statistiques descriptives, des histogrammes et des représentations synthétiques. Cette approche permet notamment d'évaluer la tendance centrale, la dispersion et la forme générale des distributions.
+
+L'analyse bivariée a ensuite permis d'explorer les relations entre variables explicatives, ainsi qu'entre les variables explicatives et les cibles. Les matrices de corrélation, les tableaux croisés et certains graphiques comparatifs ont aidé à mettre en évidence des associations intéressantes, en particulier entre les comportements d'achat et le risque de churn.
+
+\subsection{Apport de l'EDA au Projet}
+Cette phase exploratoire joue un rôle central dans la suite du travail. Elle guide les choix de prétraitement, aide à sélectionner les variables les plus pertinentes et permet d'orienter les décisions méthodologiques pour la classification, la régression et le clustering. En d'autres termes, l'EDA sert de base analytique à l'ensemble du pipeline de machine learning.
+
+Les distributions, corrélations et valeurs manquantes ont été étudiées plus en détail dans le notebook \texttt{01\_data\_exploration.ipynb}.
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[t]{0.8\textwidth}
+\centering
+\includegraphics[width=\textwidth]{output/explora.png}
+\caption{Vue synthétique de l'exploration initiale des données.}
+\label{fig:eda-overview}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.8\textwidth}
+\centering
+\includegraphics[width=\textwidth]{output/stats.png}
+\caption{Statistiques descriptives des principales variables du jeu de données.}
+\label{fig:data-stats}
+\end{minipage}
+\end{figure}
+
+
+\clearpage
+
+\section{Préprocessing des Données}
+
+Le prétraitement a été conçu comme une étape centrale du pipeline afin de produire des données cohérentes, exploitables et alignées avec les besoins des tâches de classification, de régression et de clustering. Le script \texttt{src/preprocessing.py} ne se limite pas à un simple nettoyage : il met en place une chaîne complète allant du filtrage des anomalies jusqu'à l'export des jeux de données et des artefacts de modélisation.
+
+\subsection{Classification}
+Le pipeline appliqué à la classification commence par la lecture du fichier brut, puis par une série d'opérations destinées à fiabiliser les données avant apprentissage. Une copie du jeu brut est d'abord conservée afin de maintenir un lien entre les données transformées et certaines sorties nécessaires à l'inférence ou à l'analyse ultérieure.
+
+\begin{lstlisting}[language=Python, caption=Préprocessing classification]
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+# Encoding des variables categorielles
+le = LabelEncoder()
+# Scaling
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+\end{lstlisting}
+
+\subsection{Nettoyage et Détection des Anomalies}
+La première fonctionnalité importante du script repose sur la détection automatique des valeurs atypiques à l'aide de \texttt{IsolationForest}. Les colonnes numériques pertinentes sont sélectionnées en excluant la cible \texttt{Churn} et les identifiants comme \texttt{CustomerID}. Les observations détectées comme aberrantes sont supprimées, ce qui permet de réduire l'influence des points extrêmes sur la normalisation, la PCA et les algorithmes supervisés.
+
+Le pipeline traite également les variables temporelles. La colonne \texttt{RegistrationDate} est convertie au format date, puis enrichie par l'extraction de \texttt{RegYear} et \texttt{RegMonth}. Cette transformation rend l'information temporelle plus facilement exploitable par les modèles tout en gérant les dates invalides grâce au paramètre \texttt{errors='coerce'}.
+
+\subsection{Sélection, Encodage et Imputation}
+Le script supprime ensuite plusieurs colonnes jugées peu pertinentes, redondantes ou trop proches d'identifiants techniques, comme \texttt{LastLoginIP}, \texttt{NewsletterSubscribed} ou certaines variables dérivées déjà fortement corrélées. Une fonction dédiée, \texttt{drop\_high\_cardinality}, retire en plus les colonnes présentant un ratio de valeurs uniques trop élevé, ce qui permet d'éviter l'introduction de variables quasi-identifiantes peu utiles à la généralisation.
+
+Les variables catégorielles restantes sont encodées avec \texttt{LabelEncoder}. Enfin, les valeurs manquantes sont remplacées par la médiane des colonnes, ce qui garantit un jeu de données complet avant la standardisation.
+
+\subsection{Standardisation, PCA et Clustering}
+Après nettoyage, les variables explicatives sont séparées des cibles \texttt{Churn} et \texttt{MonetaryTotal}. Les données sont ensuite standardisées avec \texttt{StandardScaler}, ce qui est indispensable avant l'application de la PCA, afin de mettre toutes les variables sur une échelle comparable.
+
+La réduction de dimension est réalisée avec \texttt{PCA(n\_components=10)}, ce qui permet de condenser l'information dans dix composantes principales. Cette représentation sert à la fois à la classification et au clustering. Un modèle \texttt{KMeans} à quatre clusters est ensuite entraîné sur l'espace PCA, avec \texttt{n\_init=10} pour stabiliser l'initialisation des centres.
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[t]{0.47\textwidth}
+\centering
+\includegraphics[width=\textwidth]{output/app2.png}
+\caption{Étape de chargement et de préparation des données dans l'application.}
+\label{fig:preprocessing-app}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.47\textwidth}
+\centering
+\includegraphics[width=\textwidth]{output/app6.png}
+\caption{Visualisation des segments obtenus après réduction de dimension et clustering.}
+\label{fig:preprocessing-clustering}
+\end{minipage}
+\end{figure}
+
+\subsection{Export des Données et Artefacts}
+Une fois les transformations terminées, le script génère un fichier consolidé \texttt{processed\_data\_final.csv} contenant les composantes principales ainsi que les cibles de classification et de régression. Il effectue ensuite un découpage \texttt{train/test} stratifié avec un ratio 80/20 pour préserver la distribution de la variable \texttt{Churn}.
+
+Les fichiers \texttt{X\_train.csv}, \texttt{X\_test.csv}, \texttt{y\_train.csv} et \texttt{y\_test.csv} sont exportés dans.\par \texttt{data/train\_test/}. En parallèle, les objets appris sont sauvegardés dans \texttt{models/} : \texttt{scaler.pkl}, \texttt{pca\_model.pkl} et \texttt{kmeans\_model.pkl}. Cette étape assure la reproductibilité du pipeline et facilite la réutilisation des transformations lors du déploiement.
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[t]{0.47\textwidth}
+\centering
+\includegraphics[width=\textwidth]{output/train_test.png}
+\caption{Contenu du dossier \texttt{data/train\_test/} après export des jeux d'entraînement et de test.}
+\label{fig:train-test-folder}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.47\textwidth}
+\centering
+\includegraphics[width=\textwidth]{output/models.png}
+\caption{Contenu du dossier \texttt{models/} après sauvegarde des artefacts du pipeline.}
+\label{fig:models-folder}
+\end{minipage}
+\end{figure}
+
+\subsection{Synchronisation avec les Données Brutes}
+Une fonctionnalité particulièrement utile du script est la génération du fichier \texttt{X\_test\_brut\_40.csv}. Celui-ci permet de conserver, pour les observations du jeu de test, une version brute mais parfaitement alignée avec les lignes transformées utilisées par les modèles. Cette synchronisation est essentielle pour interpréter les prédictions, vérifier les entrées en production et alimenter correctement une interface applicative.
+
+Split 80/20 train/test avec stratification sur la cible de churn.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{output/xtestbrut.png}
+\caption{Extrait du fichier \texttt{X\_test\_brut\_40.csv} généré après synchronisation entre les données brutes et le jeu de test.}
+\label{fig:x-test-brut-40}
+\end{figure}
+
+\subsection{Régression}
+Pour la régression, le pipeline conserve la cible \texttt{MonetaryTotal} sous la variable \texttt{y\_reg\_full}, ce qui permet d'intégrer une dimension quantitative au projet sans perdre l'information monétaire lors des étapes de transformation. Le fichier \texttt{src/preprocessing-reg.py} complète ce travail pour certains scénarios spécifiques sur données brutes.
+
+Modèles et artefacts sauvés : \texttt{scaler.pkl}, \texttt{pca\_model.pkl}, \texttt{kmeans\_model.pkl}.
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[t]{0.47\textwidth}
+\centering
+\includegraphics[width=\textwidth]{output/train_test_reg.png}
+\caption{ne capture du dossier \texttt{train\_test\_reg}.}
+\label{fig:train-test-reg-folder}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.47\textwidth}
+\centering
+\includegraphics[width=\textwidth]{output/models.png}
+\caption{Contenu du dossier \texttt{models/} après sauvegarde des artefacts du pipeline.}
+\label{fig:models-folder-reg}
+\end{minipage}
+\end{figure}
+
+
+
+\clearpage
+
+\section{Modélisation Classification - Prédiction Churn}
+
+Quatre modèles comparés sur métriques : Accuracy, F1, AUC-ROC.
+\subsection{Comparaison des Modèles}
+Données de output/model\_comparison.csv :
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+Modèle & Accuracy & F1-Score & AUC-ROC \\
+\midrule
+Decision Tree & 0.82 & 0.79 & 0.85 \\
+KNN & 0.81 & 0.78 & 0.83 \\
+Random Forest & 0.88 & 0.86 & 0.92 \\
+XGBoost & \textbf{0.91} & \textbf{0.90} & \textbf{0.95} \\
+\bottomrule
+\end{tabular}
+\caption{Comparaison des performances}
+\end{table}
+
+L'analyse comparative met en évidence une hiérarchie claire entre les modèles testés. Le \texttt{DecisionTree} obtient les performances les plus faibles, avec une accuracy de 0.82, un F1-score de 0.79 et un AUC-ROC de 0.85, ce qui traduit une capacité de généralisation plus limitée. Le \texttt{KNN} améliore légèrement ces résultats avec une accuracy de 0.81, un F1-score de 0.78 et un AUC-ROC de 0.83, mais reste en retrait par rapport aux approches d'ensemble.
+
+Les modèles \texttt{RandomForest} et \texttt{XGBoost} se distinguent nettement. \texttt{RandomForest} atteint une accuracy de 0.88, un F1-score de 0.86 et un AUC-ROC de 0.92, montrant un bon équilibre entre précision et robustesse. \texttt{XGBoost} présente les meilleures performances globales, avec une accuracy de 0.91, un F1-score de 0.90 et un AUC-ROC de 0.95. Ces résultats indiquent que ce modèle discrimine plus efficacement les clients susceptibles de churn tout en conservant un bon compromis entre précision et rappel.
+
+La figure suivante synthétise visuellement cette comparaison selon les principales métriques retenues : accuracy, precision, recall, F1-score et AUC-ROC.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{output/comparaison.png}
+\caption{Comparaison detaillee des metriques des modeles de classification.}
+\label{fig:model-comparison-detailed}
+\end{figure}
+
+\subsection{Decision Tree}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{output/cm_DecisionTree.png}
+\caption{Matrice de confusion Decision Tree}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{output/roc_DecisionTree.png}
+\caption{Courbe ROC Decision Tree}
+\end{figure}
+
+\subsection{KNN}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{output/cm_KNN.png}
+\caption{Matrice de confusion KNN}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{output/roc_KNN.png}
+\caption{Courbe ROC KNN}
+\end{figure}
+
+\clearpage
+
+\subsection{Random Forest}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{output/cm_RandomForest.png}
+\caption{Matrice de confusion Random Forest}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{output/roc_RandomForest.png}
+\caption{Courbe ROC Random Forest}
+\end{figure}
+
+\subsection{XGBoost (Meilleur Modèle)}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{output/cm_XGBoost.png}
+\caption{Matrice de confusion XGBoost}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{output/roc_XGBoost.png}
+\caption{Courbe ROC XGBoost}
+\end{figure}
+
+
+
+\clearpage
+
+\section{Modélisation Régression}
+
+Modèle sur données brutes (data/regression\_specific/*.csv).
+
+Entraîné dans notebooks/05\_trainREG.ipynb, sauvé comme regression\_model\_raw.pkl.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=\textwidth]{output/regression_raw_final_report.png}
+\caption{Rapport final régression sur données brutes}
+\end{figure}
+
+Métriques excellentes sur test set.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.7\textwidth]{output/reg.png}
+\caption{Visualisation detaillee des metriques de regression.}
+\label{fig:regression-metrics}
+\end{figure}
+
+\begin{tcolorbox}[title=Insights Régression]
+Prédictions précises des valeurs cibles, RMSE faible.
+\end{tcolorbox}
+
+
+\clearpage
+
+\section{Clustering et Réduction de Dimension}
+
+Cette partie complète les approches supervisées en apportant une lecture plus exploratoire du portefeuille client. L'objectif n'est pas de prédire une cible, mais d'identifier des groupes homogènes de clients à partir de leurs comportements d'achat, de leur niveau d'engagement et de leur valeur potentielle. Dans le projet global, cette étape permet d'alimenter des actions marketing différenciées, par exemple en distinguant les clients à forte valeur, les profils fragiles proches du churn et les utilisateurs peu engagés.
+
+Le pipeline de segmentation repose sur deux briques complémentaires : la réduction de dimension par ACP pour résumer l'information dans un espace plus lisible, puis le clustering par KMeans pour construire des groupes interprétables. Les artefacts sauvegardés permettent de réutiliser cette chaîne dans l'application et de garantir la cohérence entre les données d'entraînement et les nouvelles observations.
+
+\subsection{PCA}
+Le modèle \texttt{pca\_model.pkl} est utilisé pour projeter les données clients dans un espace de dimension réduite, généralement à 2 ou 3 composantes principales. Cette étape facilite à la fois la visualisation et la segmentation : elle réduit le bruit, limite la redondance entre variables et permet de représenter plus clairement la structure globale des profils clients.
+
+Dans une logique métier, l'ACP aide à répondre à deux questions essentielles : quelles combinaisons de variables expliquent le plus de variabilité entre les clients, et dans quelle mesure les individus se répartissent naturellement dans l'espace latent obtenu. Les visualisations PCA servent donc de support d'interprétation avant même l'application de l'algorithme de clustering.
+
+\subsection{KMeans}
+Le modèle \texttt{kmeans\_model.pkl} est ensuite appliqué sur les données transformées afin de construire des segments opérationnels. Le nombre de clusters optimal est recherché dans une plage de \texttt{k=3} à \texttt{k=5}, ce qui constitue un bon compromis entre lisibilité business et finesse de segmentation. Les groupes identifiés dans ce projet peuvent être interprétés comme des segments du type \textit{High-value}, \textit{At-risk} et \textit{Low-engagement}.
+
+Cette segmentation est particulièrement utile pour relier les résultats techniques à des actions concrètes. Un cluster \textit{High-value} peut être ciblé par des campagnes premium ou des offres de fidélisation. Un cluster \textit{At-risk} peut être surveillé pour anticiper le churn et déclencher des actions de rétention. Enfin, un cluster \textit{Low-engagement} peut révéler un besoin de réactivation, de personnalisation de l'expérience ou d'ajustement des messages marketing.
+
+
+\begin{tcolorbox}[title=Captures recommandées à ajouter]
+Pour enrichir encore cette section dans une prochaine version du rapport, il serait très pertinent d'ajouter : la courbe de la méthode du coude pour justifier le choix de \texttt{k}, un nuage de points PCA coloré par cluster, un tableau de profils moyens par segment (revenu, fréquence d'achat, dépense totale, churn moyen) et une capture du code ou du notebook montrant l'enchaînement \texttt{scaling $\rightarrow$ PCA $\rightarrow$ KMeans}.
+\end{tcolorbox}
+
+\clearpage
+
+\section{Application Flask}
+
+L'application a été développée comme une couche de démonstration opérationnelle du projet. Déployée via \texttt{app/app.py}, elle permet de passer d'un travail de notebook à une interface exploitable par un utilisateur non technique. Elle centralise le chargement des données, le prétraitement, l'inférence des modèles et la restitution visuelle des résultats dans un même environnement.
+
+\subsection{Pipeline applicatif}
+Le pipeline suivi dans l'application reprend la logique générale du projet de machine learning. L'utilisateur commence par charger un jeu de données, qui est ensuite contrôlé et préparé selon les transformations attendues par les modèles sauvegardés. Après cette phase de prétraitement, l'application permet d'exécuter plusieurs briques : prédiction du churn pour la classification, estimation d'une valeur continue pour la régression et projection/segmentation pour le clustering. Les sorties sont ensuite affichées sous forme de tableaux, d'indicateurs synthétiques et de visualisations interactives afin de faciliter l'interprétation métier.
+
+Cette architecture présente un intérêt important : elle garantit la continuité entre l'entraînement et l'usage. Les mêmes artefacts sauvegardés lors de la phase de modélisation sont réutilisés dans l'interface, ce qui limite les écarts entre expérimentation et démonstration. L'application sert donc à la fois de vitrine fonctionnelle du projet et de support de validation des résultats obtenus dans les notebooks.
+
+\subsection{Fonctionnalités principales}
+\begin{itemize}
+    \item Import des données à analyser depuis l'interface.
+    \item Prétraitement cohérent avec les pipelines utilisés à l'entraînement.
+    \item Prédictions de classification pour identifier les clients à risque de churn.
+    \item Prédictions de régression pour estimer une variable continue liée au comportement ou à la valeur client.
+    \item Visualisations interactives pour explorer les sorties du modèle et la segmentation.
+    \item Restitution synthétique des résultats pour un usage plus orienté décision.
+\end{itemize}
+
+\subsection{Captures d'écran de l'application}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{output/app1.png}
+\caption{Page d'accueil de l'application. Cette interface introduit les différents modules disponibles et constitue le point d'entrée de l'utilisateur dans le workflow de démonstration.}
+\end{figure}
+\newpage
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{output/app2.png}
+\caption{Étape d'upload et de preprocessing. Elle montre comment les données brutes sont chargées puis préparées avant d'être transmises aux modèles entraînés.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{output/app3.png}
+\caption{Écran de prédiction du churn. L'application y applique le modèle de classification afin d'identifier rapidement les profils clients les plus susceptibles de se désengager.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{output/app4.png}
+\caption{Restitution des résultats de classification. Cette vue permet de commenter les sorties du modèle à travers des indicateurs et des visualisations plus lisibles pour l'utilisateur final.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{output/app5.png}
+\caption{Module de prédiction régression. Il illustre l'estimation d'une cible continue et montre comment les résultats peuvent être interprétés dans une logique de valeur client ou de comportement d'achat.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{output/app6.png}
+\caption{Visualisation du clustering. Cette interface aide à explorer la répartition des clients dans l'espace réduit et à mieux comprendre la logique des segments obtenus.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\textwidth]{output/app7.png}
+\caption{Dashboard d'insights. Il regroupe une vue plus synthétique des résultats pour soutenir l'analyse métier, la communication des conclusions et la prise de décision.}
+\end{figure}
+
+\clearpage
+
+
+
+\section{Conclusion et Perspectives}
+
+\subsection{Résultats Clés}
+- XGBoost : 91\% accuracy churn
+- Bonne performance régression
+- Clustering efficace
+- App déployée
+
+\subsection{Insights Business}
+\begin{itemize}
+    \item Mettre en place des actions de rétention ciblées sur les clients identifiés comme \textit{at-risk}, afin de réduire le churn grâce à des campagnes personnalisées, des offres incitatives ou un suivi plus proactif de leur engagement.
+    \item Développer des stratégies d'upselling et de fidélisation spécifiques pour les segments \textit{high-value}, qui représentent les profils les plus rentables et les plus stratégiques pour la croissance de l'entreprise.
+    \item Exploiter les résultats du modèle de régression pour mieux ajuster les décisions liées au pricing, à la valeur client attendue et à la priorisation des offres commerciales selon le potentiel estimé de chaque profil.
+\end{itemize}
+
+\subsection{Perspectives}
+\begin{itemize}
+    \item Explorer des approches de \textit{deep learning}, notamment des architectures de type LSTM ou d'autres modèles séquentiels, afin de mieux exploiter une éventuelle dimension temporelle dans les comportements d'achat et d'améliorer l'anticipation du churn.
+    \item Enrichir le travail de \textit{feature engineering} avec des variables plus avancées, par exemple des indicateurs RFM (\textit{Recency, Frequency, Monetary}), des ratios comportementaux ou des scores composites permettant de capturer plus finement la valeur et l'engagement client.
+    \item Étendre le projet vers un déploiement cloud sur des plateformes comme Heroku, AWS ou des services équivalents, afin de rendre l'application plus accessible, plus robuste et plus proche d'un cadre réel d'exploitation en production.
+    \item Mettre en place des démarches d'A/B testing autour des prédictions et des recommandations générées, dans le but d'évaluer concrètement l'impact business des modèles sur la rétention, la conversion et la performance des campagnes marketing.
+\end{itemize}
+
+
+\end{document}
